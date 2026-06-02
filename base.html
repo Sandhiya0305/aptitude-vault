@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Placement Aptitude Gold</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red:#DC0000;--red-dark:#a00000;--red-bright:#ff1a1a;
+    --black:#0a0a0a;--black-2:#111111;--black-3:#181818;--black-4:#222222;--black-5:#2a2a2a;
+    --white:#f5f0e8;--white-dim:rgba(245,240,232,0.6);--white-faint:rgba(245,240,232,0.1);
+    --gold:#c9a84c;--gold-dim:rgba(201,168,76,0.3);
+    --green:#00b050;--green-dim:rgba(0,176,80,0.15);
+    --font-head:'Barlow Condensed',sans-serif;--font-body:'Barlow',sans-serif;--font-mono:'Space Mono',monospace;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--black);color:var(--white);font-family:var(--font-body);font-size:15px;line-height:1.6;min-height:100vh;overflow-x:hidden;}
+  body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;background:repeating-linear-gradient(90deg,transparent,transparent 99px,rgba(220,0,0,0.025) 99px,rgba(220,0,0,0.025) 100px);pointer-events:none;z-index:0;}
+
+  .global-progress-bar{background:var(--black-4);height:3px;position:fixed;top:0;left:0;right:0;z-index:300;}
+  .global-progress-fill{height:100%;background:var(--red);transition:width 0.4s ease;}
+
+  .hero{position:relative;background:var(--black-2);border-bottom:3px solid var(--red);overflow:hidden;z-index:1;}
+  .hero-inner{max-width:1100px;margin:0 auto;padding:50px 30px 40px;position:relative;}
+  .hero-stripe{position:absolute;top:0;left:0;width:6px;height:100%;background:var(--red);}
+  .hero-badge{display:inline-block;font-family:var(--font-head);font-size:10px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:var(--red);border:1px solid var(--red);padding:4px 12px;margin-bottom:16px;}
+  .hero h1{font-family:var(--font-head);font-size:clamp(2.5rem,7vw,5.5rem);font-weight:900;line-height:0.9;text-transform:uppercase;color:var(--white);margin-bottom:4px;}
+  .hero h1 span{color:var(--red);display:block;}
+  .hero-sub{font-size:11px;color:var(--white-dim);letter-spacing:2px;text-transform:uppercase;margin-top:14px;margin-bottom:20px;}
+  .hero-stats{display:flex;gap:28px;flex-wrap:wrap;}
+  .stat{display:flex;flex-direction:column;}
+  .stat-num{font-family:var(--font-head);font-size:2rem;font-weight:800;color:var(--red);line-height:1;}
+  .stat-label{font-size:10px;text-transform:uppercase;letter-spacing:2px;color:var(--white-dim);margin-top:2px;}
+  .hero-score-display{position:absolute;top:36px;right:30px;}
+  .score-box{background:var(--black-4);border:1px solid var(--black-5);border-top:2px solid var(--gold);padding:14px 20px;min-width:130px;}
+  .score-title{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:4px;}
+  .score-val{font-family:var(--font-head);font-size:2.4rem;font-weight:900;color:var(--white);line-height:1;}
+  .score-denom{font-size:11px;color:var(--white-dim);}
+
+  .topic-nav{position:sticky;top:0;z-index:100;background:var(--black-2);border-bottom:1px solid var(--black-4);overflow-x:auto;scrollbar-width:none;}
+  .topic-nav::-webkit-scrollbar{display:none;}
+  .topic-nav-inner{display:flex;max-width:1100px;margin:0 auto;padding:0 30px;}
+  .topic-btn{background:none;border:none;color:var(--white-dim);font-family:var(--font-head);font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;padding:14px 14px;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;transition:all 0.2s;flex-shrink:0;}
+  .topic-btn:hover{color:var(--white);border-bottom-color:var(--red);}
+  .topic-btn.active{color:var(--red);border-bottom-color:var(--red);}
+
+  .page-container{max-width:1100px;margin:0 auto;padding:36px 30px 80px;position:relative;z-index:1;}
+
+  .page-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;padding:16px 20px;background:var(--black-3);border:1px solid var(--black-5);}
+  .page-nav-btn{background:none;border:1px solid var(--black-5);color:var(--white-dim);font-family:var(--font-head);font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:10px 20px;cursor:pointer;transition:all 0.2s;}
+  .page-nav-btn:hover:not(:disabled){border-color:var(--red);color:var(--white);}
+  .page-nav-btn:disabled{opacity:0.3;cursor:default;}
+  .page-nav-btn.primary{background:var(--red);border-color:var(--red);color:var(--white);}
+  .page-nav-btn.primary:hover{background:var(--red-bright);}
+  .page-info{text-align:center;}
+  .page-info-main{font-family:var(--font-head);font-size:1rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--white);}
+  .page-info-sub{font-size:11px;color:var(--white-dim);letter-spacing:1px;margin-top:2px;}
+
+  .topic-progress{margin-bottom:24px;}
+  .topic-progress-label{font-size:11px;color:var(--white-dim);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;display:flex;justify-content:space-between;}
+  .topic-progress-bar{background:var(--black-4);height:3px;}
+  .topic-progress-fill{height:100%;background:var(--red);transition:width 0.4s ease;}
+
+  .section-header{display:flex;align-items:flex-end;gap:20px;margin-bottom:24px;padding-bottom:14px;border-bottom:1px solid var(--black-4);position:relative;}
+  .section-header::before{content:'';position:absolute;bottom:-1px;left:0;width:60px;height:2px;background:var(--red);}
+  .section-num{font-family:var(--font-head);font-size:4rem;font-weight:900;color:var(--black-4);line-height:1;user-select:none;}
+  .section-title{font-family:var(--font-head);font-size:1.8rem;font-weight:800;text-transform:uppercase;color:var(--white);line-height:1;}
+  .section-count{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--red);margin-top:4px;}
+
+  .concepts{background:var(--black-3);border:1px solid var(--black-5);border-top:2px solid var(--gold);padding:16px 20px;margin-bottom:20px;}
+  .concepts-title{font-family:var(--font-head);font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:10px;}
+  .concepts ul{list-style:none;display:flex;flex-direction:column;gap:5px;}
+  .concepts li{font-size:13px;color:var(--white-dim);padding-left:16px;position:relative;}
+  .concepts li::before{content:'◆';position:absolute;left:0;color:var(--red);font-size:7px;top:5px;}
+
+  .formula-grid{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px;}
+  .formula-pill{background:var(--black-3);border:1px solid var(--black-5);border-left:2px solid var(--red);padding:6px 12px;font-family:var(--font-mono);font-size:11px;color:var(--white);}
+  .formula-pill b{color:var(--gold);font-weight:700;}
+
+  .q-card{background:var(--black-2);border:1px solid var(--black-4);border-left:3px solid var(--black-5);margin-bottom:14px;transition:border-left-color 0.2s;}
+  .q-card.answered{border-left-color:var(--red);}
+  .q-card.correct{border-left-color:var(--green);}
+  .q-card-head{padding:18px 22px 14px;display:flex;align-items:flex-start;gap:14px;}
+  .q-number{font-family:var(--font-head);font-size:11px;font-weight:700;letter-spacing:2px;color:var(--red);text-transform:uppercase;white-space:nowrap;padding-top:2px;min-width:30px;}
+  .q-text{font-size:15px;font-weight:500;color:var(--white);line-height:1.6;flex:1;}
+  .q-text em{font-style:normal;color:var(--gold);font-weight:600;}
+
+  .q-options{padding:2px 22px 18px 66px;display:grid;grid-template-columns:1fr 1fr;gap:7px;}
+  .opt{background:var(--black-3);border:1px solid var(--black-5);padding:10px 14px;cursor:pointer;font-size:14px;color:var(--white-dim);display:flex;align-items:center;gap:10px;transition:all 0.15s;user-select:none;}
+  .opt:hover:not(.locked){background:var(--black-4);border-color:var(--red);color:var(--white);}
+  .opt.selected{background:var(--black-4);border-color:var(--white-dim);color:var(--white);}
+  .opt.reveal-correct{background:var(--green-dim);border-color:var(--green);color:var(--green);font-weight:600;}
+  .opt.reveal-wrong{background:rgba(220,0,0,0.08);border-color:rgba(220,0,0,0.4);color:rgba(220,0,0,0.7);}
+  .opt-key{font-family:var(--font-mono);font-size:10px;font-weight:700;color:var(--red);min-width:14px;}
+  .opt.reveal-correct .opt-key{color:var(--green);}
+  .opt.reveal-wrong .opt-key{color:var(--red);opacity:0.7;}
+  .opt.locked{cursor:default;}
+
+  .q-footer{padding:0 22px 18px 66px;display:flex;align-items:center;gap:14px;}
+  .reveal-btn{background:var(--red);color:var(--white);border:none;padding:9px 22px;font-family:var(--font-head);font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all 0.15s;}
+  .reveal-btn:hover{background:var(--red-bright);}
+  .reveal-btn:disabled{background:var(--black-5);color:var(--white-dim);cursor:default;}
+  .result-badge{font-family:var(--font-head);font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;}
+  .correct-badge{color:var(--green);}
+  .wrong-badge{color:var(--red);}
+
+  .solution{display:none;background:var(--black-3);border-top:1px solid var(--black-5);padding:18px 22px 18px 66px;}
+  .solution.visible{display:block;}
+  .sol-head{font-family:var(--font-head);font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:12px;padding-bottom:7px;border-bottom:1px solid var(--black-5);}
+  .sol-steps{list-style:none;display:flex;flex-direction:column;gap:6px;}
+  .sol-steps li{font-size:14px;color:var(--white-dim);padding-left:18px;position:relative;}
+  .sol-steps li::before{content:'→';position:absolute;left:0;color:var(--red);font-size:12px;}
+  .sol-steps li strong{color:var(--white);}
+  .sol-shortcut{margin-top:12px;background:var(--black-4);border-left:2px solid var(--gold);padding:9px 13px;font-size:13px;color:var(--white-dim);}
+  .sol-shortcut b{color:var(--gold);}
+
+  .scoreboard{background:var(--black-2);border:1px solid var(--black-4);border-top:3px solid var(--red);padding:36px;text-align:center;}
+  .scoreboard h2{font-family:var(--font-head);font-size:1.1rem;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:var(--white-dim);margin-bottom:16px;}
+  .score-big{font-family:var(--font-head);font-size:6rem;font-weight:900;color:var(--red);line-height:1;}
+  .score-out-of{font-size:14px;color:var(--white-dim);margin-top:4px;}
+  .score-grade{margin-top:16px;font-family:var(--font-head);font-size:1.4rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;}
+  .score-grade.s{color:var(--gold);}
+  .score-grade.a{color:var(--green);}
+  .score-grade.b{color:var(--white);}
+  .score-grade.c{color:var(--red);}
+  .score-breakdown{display:flex;justify-content:center;gap:24px;margin-top:20px;flex-wrap:wrap;}
+  .sb-stat{background:var(--black-3);border:1px solid var(--black-5);padding:12px 18px;text-align:center;}
+  .sb-stat-num{font-family:var(--font-head);font-size:1.8rem;font-weight:800;line-height:1;}
+  .sb-stat-label{font-size:10px;text-transform:uppercase;letter-spacing:2px;color:var(--white-dim);margin-top:3px;}
+  .reset-btn{margin-top:20px;background:none;border:1px solid var(--red);color:var(--red);font-family:var(--font-head);font-size:13px;font-weight:700;letter-spacing:3px;text-transform:uppercase;padding:11px 28px;cursor:pointer;transition:all 0.2s;}
+  .reset-btn:hover{background:var(--red);color:var(--white);}
+  .back-btn{margin-top:10px;margin-left:10px;background:none;border:1px solid var(--gold);color:var(--gold);font-family:var(--font-head);font-size:13px;font-weight:700;letter-spacing:3px;text-transform:uppercase;padding:11px 28px;cursor:pointer;transition:all 0.2s;}
+  .back-btn:hover{background:var(--gold);color:var(--black);}
+
+  ::-webkit-scrollbar{width:6px;height:6px;}
+  ::-webkit-scrollbar-track{background:var(--black);}
+  ::-webkit-scrollbar-thumb{background:var(--red);}
+
+  @media(max-width:700px){
+    .q-options{grid-template-columns:1fr;padding-left:22px;}
+    .q-footer{padding-left:22px;}
+    .solution{padding-left:22px;}
+    .hero-score-display{position:static;margin-top:20px;}
+    .score-big{font-size:4rem;}
+    .page-nav{flex-direction:column;gap:12px;}
+    .page-info{order:-1;}
+    .score-breakdown{gap:12px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="global-progress-bar"><div class="global-progress-fill" id="globalBar"></div></div>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-stripe"></div>
+    <div class="hero-badge">Placement Series · 2025–26</div>
+    <h1>Placement<span>Aptitude Gold</span></h1>
+    <p class="hero-sub">TCS · Infosys · Wipro · Cognizant · Accenture · Deloitte · Capgemini · HCL · All IT & Core Companies</p>
+    <div class="hero-stats">
+      <div class="stat"><span class="stat-num">80+</span><span class="stat-label">Questions</span></div>
+      <div class="stat"><span class="stat-num">18</span><span class="stat-label">Topics</span></div>
+      <div class="stat"><span class="stat-num" id="heroAnswered">0</span><span class="stat-label">Attempted</span></div>
+      <div class="stat"><span class="stat-num" id="heroCorrect">0</span><span class="stat-label">Correct</span></div>
+    </div>
+    <div class="hero-score-display">
+      <div class="score-box">
+        <div class="score-title">Live Score</div>
+        <div class="score-val" id="heroScore">0</div>
+        <div class="score-denom">of <span id="heroTotal">0</span> answered</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<nav class="topic-nav">
+  <div class="topic-nav-inner" id="topicNav"></div>
+</nav>
+
+<div class="page-container" id="pageContainer"></div>
+
+<script>
+const TOPICS=[
+  {id:"speed",title:"Speed, Time & Distance",
+   concepts:["Speed = Distance ÷ Time. Rearrange: D = S×T, T = D÷S","km/h → m/s: multiply by 5/18 | m/s → km/h: multiply by 18/5","Average speed (equal distances): 2ab/(a+b) — NEVER (a+b)/2","Relative speed (opposite dirs): S1+S2 | Same direction: |S1−S2|","Train crossing pole: distance = train length | Crossing platform: train + platform","Perpendicular paths: use Pythagoras for distance apart"],
+   formulas:[{label:"Speed",f:"D / T"},{label:"Avg Speed (equal dist)",f:"2ab / (a+b)"},{label:"Rel. speed (opp)",f:"S1 + S2"},{label:"Rel. speed (same)",f:"|S1 − S2|"},{label:"km/h → m/s",f:"× 5/18"},{label:"m/s → km/h",f:"× 18/5"}],
+   questions:[
+    {q:"Two trains start from P and Q, 480 km apart. Train A leaves P at 6:00 AM at 40 km/h. Train B leaves Q at 9:00 AM at 80 km/h. At what time do they meet?",opts:["11:00 AM","12:00 PM","12:30 PM","1:00 PM"],ans:1,steps:["Distance covered by A before B starts (3 hrs): 40 × 3 = 120 km","Remaining gap at 9 AM: 480 − 120 = 360 km","Relative speed (opposite): 40 + 80 = 120 km/h","Time to meet after 9 AM: 360 ÷ 120 = 3 hours","<strong>Meeting time: 9:00 AM + 3 hrs = 12:00 PM</strong>"],shortcut:"When one starts t hrs earlier at speed S1, remaining gap = Total − S1×t. Time = remaining ÷ (S1+S2)."},
+    {q:"A train 150 m long crosses a platform 250 m long in 40 seconds. What is the speed in km/h?",opts:["30 km/h","32 km/h","36 km/h","40 km/h"],ans:2,steps:["Total distance = train + platform = 150 + 250 = 400 m","Speed in m/s = 400 ÷ 40 = 10 m/s","<strong>Speed in km/h = 10 × 18/5 = 36 km/h</strong>"],shortcut:"Always add both lengths when crossing a platform. m/s × 18/5 = km/h."},
+    {q:"A car travels from A to B at 60 km/h and returns at 40 km/h. What is the average speed?",opts:["48 km/h","50 km/h","52 km/h","54 km/h"],ans:0,steps:["Formula for equal distances: 2ab/(a+b)","= 2 × 60 × 40 / (60+40) = 4800/100","<strong>= 48 km/h</strong>"],shortcut:"NEVER use arithmetic mean for avg speed. Harmonic mean 2ab/(a+b) for equal distances."},
+    {q:"A man covers a certain distance at 8 km/h and returns at 12 km/h. Total time = 10 hours. Find one-way distance.",opts:["40 km","44 km","48 km","52 km"],ans:2,steps:["Average speed = 2×8×12/(8+12) = 192/20 = 9.6 km/h","Total distance = 9.6 × 10 = 96 km","<strong>One-way distance = 96/2 = 48 km</strong>"]},
+    {q:"A train passes a pole in 8 seconds and a platform 200 m long in 24 seconds. Find the length of the train.",opts:["80 m","100 m","120 m","150 m"],ans:1,steps:["Let train length = L, speed = S m/s","Passing pole: L = 8S","Passing platform: (L+200)/S = 24 → L+200 = 24S","Substitute: 8S + 200 = 24S → 16S = 200 → S = 12.5 m/s","<strong>L = 8 × 12.5 = 100 m</strong>"]},
+    {q:"Two buses leave the same point at 8 AM — Bus A goes North at 50 km/h, Bus B goes East at 60 km/h. How far apart at 10 AM?",opts:["100 km","120 km","130 km","~156 km"],ans:3,steps:["Time elapsed: 2 hours","Bus A travels: 50 × 2 = 100 km (North)","Bus B travels: 60 × 2 = 120 km (East)","They form a right triangle → distance = √(100² + 120²)","<strong>= √24400 ≈ 156.2 km</strong>"],shortcut:"North + East → right angle → Pythagoras theorem."},
+    {q:"A person covers first half of a journey at 30 km/h and second half at 20 km/h. Total distance = 120 km. Total time?",opts:["4.5 hours","5 hours","5.5 hours","6 hours"],ans:1,steps:["First half = 60 km at 30 km/h → time = 2 hours","Second half = 60 km at 20 km/h → time = 3 hours","<strong>Total time = 2 + 3 = 5 hours</strong>"]},
+    {q:"A thief is spotted 60 m from a policeman. The thief runs at 10 m/s and the policeman at 12 m/s. How long for the policeman to catch the thief?",opts:["20 sec","30 sec","40 sec","50 sec"],ans:1,steps:["Relative speed (same direction) = 12 − 10 = 2 m/s","Time = gap / relative speed = 60 / 2","<strong>= 30 seconds</strong>"]}
+  ]},
+  {id:"time-work",title:"Time & Work",
+   concepts:["If A takes n days, A's 1-day work = 1/n","A & B together: Time = ab/(a+b) days","Efficiency ∝ 1/Time. If A is 2× faster, A takes half the time","Man-days: Work = Men × Days. Increase men → fewer days","If A is n times efficient as B and together take T days: A alone = T(n+1)/n"],
+   formulas:[{label:"Together (A+B)",f:"ab / (a+b)"},{label:"Remaining work",f:"1 − work done"},{label:"Man-days",f:"M1×D1 = M2×D2"}],
+   questions:[
+    {q:"A completes a project in 12 days, B in 18 days. They work together for 4 days, then A leaves. How many more days does B need?",opts:["6 days","8 days","9 days","10 days"],ans:1,steps:["A's rate: 1/12/day, B's rate: 1/18/day","Combined: 1/12 + 1/18 = 5/36","Work in 4 days: 4 × 5/36 = 5/9","Remaining: 1 − 5/9 = 4/9","<strong>B alone: (4/9) ÷ (1/18) = 8 days</strong>"]},
+    {q:"A can do work in 20 days, B in 30 days. Working together, time to do TWICE the work?",opts:["24 days","25 days","30 days","36 days"],ans:0,steps:["Together: 20×30/50 = 12 days for 1 unit","<strong>For 2 units = 12 × 2 = 24 days</strong>"],shortcut:"Together time × 2 for double the work."},
+    {q:"12 men complete work in 8 days. After 3 days, 4 men leave. How many total days to finish?",opts:["10 days","11 days","12 days","14 days"],ans:1,steps:["Total work = 12 × 8 = 96 man-days","Work done in 3 days: 36 man-days","Remaining: 60 man-days, Men remaining: 8","Days needed: 60/8 = 7.5 days","<strong>Total: 3 + 7.5 ≈ 11 days</strong>"]},
+    {q:"A+B together: 12 days. B+C together: 15 days. C+A together: 20 days. How long for A, B, C together?",opts:["8 days","9 days","10 days","12 days"],ans:2,steps:["(A+B)=1/12, (B+C)=1/15, (C+A)=1/20","Sum: 2(A+B+C) = 5/60+4/60+3/60 = 1/5","<strong>A+B+C = 1/10 → 10 days</strong>"]},
+    {q:"A is twice as efficient as B. Together they complete work in 18 days. How many days for A alone?",opts:["24 days","27 days","30 days","36 days"],ans:1,steps:["Let B = 1 unit/day → A = 2 units/day","Combined = 3 units/day","Total work = 3 × 18 = 54 units","<strong>A alone: 54 ÷ 2 = 27 days</strong>"],shortcut:"A is n× efficient as B, together T days → A alone = T(n+1)/n = 18×3/2 = 27."},
+    {q:"20 men can complete a job in 15 days. How many men to complete it in 10 days?",opts:["25 men","28 men","30 men","35 men"],ans:2,steps:["Total work = 20 × 15 = 300 man-days","Men needed for 10 days = 300 / 10","<strong>= 30 men</strong>"]},
+    {q:"A and B can complete work in 15 and 20 days. They start together but A leaves 5 days before completion. In how many days is the work finished?",opts:["10 days","11 days","12 days","13 days"],ans:1,steps:["Let total days = D. A works (D−5) days, B works D days","(D−5)/15 + D/20 = 1 → multiply by 60","4(D−5) + 3D = 60 → 7D = 80","<strong>D ≈ 11 days</strong>"]}
+  ]},
+  {id:"profit",title:"Profit, Loss & Discount",
+   concepts:["Profit: SP > CP | Loss: SP < CP","Profit% = (SP−CP)/CP × 100 | Loss% = (CP−SP)/CP × 100","SP = CP × (1 + P%) or CP × (1 − L%)","MP → discount → SP: SP = MP × (1 − D%)","Successive discounts d1, d2: Net = d1+d2 − d1×d2/100","Markup m% then discount d%: Net multiplier = (1+m)(1−d)"],
+   formulas:[{label:"Profit%",f:"(SP−CP)/CP × 100"},{label:"SP (profit)",f:"CP × (100+P%)/100"},{label:"Net disc (2 disc)",f:"d1+d2 − d1d2/100"},{label:"Net multiplier",f:"(1+m)(1−d)"}],
+   questions:[
+    {q:"A retailer marks an article 50% above CP and offers 20% discount. What is profit%?",opts:["15%","20%","25%","30%"],ans:1,steps:["Net multiplier = 1.5 × 0.8 = 1.2","<strong>Profit% = (1.2 − 1) × 100 = 20%</strong>"],shortcut:"Net multiplier method: (1+markup)(1−discount) − 1."},
+    {q:"Two successive discounts of 20% and 10% are equivalent to a single discount of?",opts:["28%","29%","30%","32%"],ans:0,steps:["Net discount = d1 + d2 − (d1×d2)/100","= 20 + 10 − 200/100 = 30 − 2","<strong>= 28%</strong>"],shortcut:"Formula: d1+d2−d1d2/100. NEVER just add percentages."},
+    {q:"By selling 45 oranges for ₹160, a man loses 20%. How many for ₹200 to gain 25%?",opts:["30","35","36","40"],ans:2,steps:["CP of 45 = 160/0.8 = ₹200","CP per orange = 200/45 = ₹40/9","SP per orange for 25% gain = (40/9) × 1.25 = ₹50/9","Number for ₹200 = 200×9/50","<strong>= 36 oranges</strong>"]},
+    {q:"An article sold at 15% profit. If sold at ₹36 more, profit would be 20%. Find the cost price.",opts:["₹600","₹720","₹750","₹800"],ans:1,steps:["Let CP = x","1.20x − 1.15x = 0.05x = 36","<strong>x = ₹720</strong>"]},
+    {q:"A shopkeeper buys 100 items for ₹1000, sells 80 at ₹15 each, remaining 20 at cost price. Overall profit%?",opts:["15%","20%","40%","25%"],ans:2,steps:["Total CP = ₹1000","Revenue: 80×15 + 20×10 = 1200+200 = ₹1400","Profit = 400","<strong>Profit% = 400/1000 × 100 = 40%</strong>"]},
+    {q:"A trader uses a 900 g weight instead of 1 kg. What is his actual profit percentage?",opts:["9%","10%","11.1%","12%"],ans:2,steps:["Profit on 900 g = (1000−900)/900 × 100","<strong>= 100/900 × 100 = 11.1%</strong>"],shortcut:"Fraud profit% = (True wt − False wt) / False wt × 100"},
+    {q:"A sells to B at 20% profit. B sells to C at 25% profit. If C pays ₹3000, what did A pay?",opts:["₹1800","₹2000","₹2500","₹2750"],ans:1,steps:["B's CP = 3000/1.25 = ₹2400","<strong>A's CP = 2400/1.20 = ₹2000</strong>"]}
+  ]},
+  {id:"percentages",title:"Percentages & Ratios",
+   concepts:["Percentage change = (New−Old)/Old × 100","Successive changes: multiply factors (1±r₁)(1±r₂)","x% of y = y% of x — powerful shortcut","Price up R%: reduce consumption by R/(100+R) × 100%","Ratio a:b → b:c → find a:c via LCM of middle term"],
+   formulas:[{label:"% change",f:"(New−Old)/Old × 100"},{label:"Consumption reduction",f:"R/(100+R) × 100"},{label:"Ratio link a:b, b:c",f:"Make b same (LCM)"}],
+   questions:[
+    {q:"A salary is first increased by 20%, decreased by 10%, then increased by 25%. Net percentage change?",opts:["30% increase","35% increase","37.5% increase","40% increase"],ans:1,steps:["Net multiplier = 1.20 × 0.90 × 1.25 = 1.35","<strong>Net change = 35% increase</strong>"],shortcut:"Multiply factors. Base 100: 100→120→108→135. Change = 35%."},
+    {q:"If the price of petrol increases by 25%, by what % should consumption reduce to keep expenditure constant?",opts:["15%","20%","25%","30%"],ans:1,steps:["Reduction % = R/(100+R) × 100 = 25/125 × 100","<strong>= 20%</strong>"],shortcut:"Standard formula: R/(100+R) × 100 for price rise of R%."},
+    {q:"Three numbers are in ratio 1:2:3. Sum of squares = 504. Find the largest.",opts:["12","15","18","21"],ans:2,steps:["Let numbers: x, 2x, 3x","x² + 4x² + 9x² = 14x² = 504 → x = 6","<strong>Largest = 3×6 = 18</strong>"]},
+    {q:"A:B = 2:3, B:C = 4:5. Find A:C.",opts:["8:15","6:20","3:5","2:5"],ans:0,steps:["LCM(3,4) = 12","A:B = 8:12, B:C = 12:15","<strong>A:C = 8:15</strong>"]},
+    {q:"In a class, 40% boys, 60% girls. 50% boys and 20% girls passed. What % of the class passed?",opts:["30%","32%","35%","36%"],ans:1,steps:["100 students: 40 boys, 60 girls","Passed: 40×50%=20, 60×20%=12","Total passed: 32","<strong>Percentage = 32%</strong>"]},
+    {q:"Two numbers in ratio 4:5. Each increased by 40, ratio becomes 6:7. Find the larger number.",opts:["80","90","100","110"],ans:2,steps:["4x, 5x → (4x+40)/(5x+40) = 6/7","28x+280 = 30x+240 → x = 20","<strong>Larger = 5×20 = 100</strong>"]}
+  ]},
+  {id:"averages",title:"Averages & Mixtures",
+   concepts:["Average = Sum / Count","Replacement: new person = old person + n×k","Weighted average = Σ(wᵢxᵢ) / Σwᵢ","Alligation: Cheaper:Dearer = (D−Mean):(Mean−C)","Mixture replacement: Final = Initial × (1−x/V)^n"],
+   formulas:[{label:"Replacement avg",f:"New = Old + n×k"},{label:"Alligation ratio",f:"(D−M) : (M−C)"},{label:"Mixture replacement",f:"V × (1−x/V)^n"}],
+   questions:[
+    {q:"Average of 30 numbers is 45. First 15 average 40, last 10 average 55. Average of remaining 5?",opts:["40","45","50","55"],ans:0,steps:["Total = 30×45 = 1350","First 15: 600, Last 10: 550","Remaining 5 sum = 1350−600−550 = 200","<strong>Average = 200/5 = 40</strong>"]},
+    {q:"A 45-litre mixture has milk:water = 2:1. How much milk must be added to make ratio 4:1?",opts:["20 L","25 L","30 L","36 L"],ans:2,steps:["Initial milk = 30 L, water = 15 L (stays constant)","New ratio 4:1 → milk = 4×15 = 60 L","<strong>Milk to add = 60 − 30 = 30 L</strong>"],shortcut:"Water stays constant. Find water, use new ratio to find required milk."},
+    {q:"Rice at ₹40/kg mixed with ₹60/kg to get mixture worth ₹48/kg. Find the ratio.",opts:["3:2","2:3","4:1","1:4"],ans:0,steps:["Alligation: C=40, D=60, M=48","Ratio = (D−M):(M−C) = 12:8","<strong>= 3:2</strong>"],shortcut:"Alligation cross method: subtract mean from each extreme diagonally."},
+    {q:"Average weight of 8 persons increases by 2.5 kg when a new person replaces one weighing 65 kg. New person's weight?",opts:["75 kg","80 kg","85 kg","90 kg"],ans:2,steps:["Total increase = 8 × 2.5 = 20 kg","<strong>New person = 65 + 20 = 85 kg</strong>"],shortcut:"New = replaced + (n × increase in avg)."},
+    {q:"A container has 40 L of milk. 4 L removed and replaced with water, done 3 times. Milk remaining?",opts:["26.24 L","29.16 L","27 L","25 L"],ans:1,steps:["Milk = 40 × (1 − 4/40)³ = 40 × (0.9)³ = 40 × 0.729","<strong>= 29.16 L</strong>"],shortcut:"Final = V × (1 − x/V)^n"}
+  ]},
+  {id:"interest",title:"Simple & Compound Interest",
+   concepts:["SI = (P×R×T)/100 | Amount = P + SI","CI: A = P(1+R/100)ⁿ | CI = A − P","CI−SI (2 yrs) = P×(R/100)²","Half-yearly: rate ÷2, periods ×2","To double (SI): Rate = 100/T%"],
+   formulas:[{label:"SI",f:"P×R×T / 100"},{label:"CI",f:"P(1+R/100)^n − P"},{label:"CI−SI (2yr)",f:"P×(R/100)²"},{label:"Double (SI)",f:"Rate = 100/T"}],
+   questions:[
+    {q:"CI − SI for 2 years at 10% p.a. is ₹50. Find the principal.",opts:["₹4000","₹4500","₹5000","₹5500"],ans:2,steps:["CI−SI (2 yrs) = P × (R/100)²","50 = P × 0.01","<strong>P = ₹5000</strong>"],shortcut:"Memorize: CI−SI (2yr) = P(R/100)²."},
+    {q:"₹10,000 at 10% p.a. compounded half-yearly for 1 year. Find amount.",opts:["₹11,000","₹11,025","₹11,050","₹11,100"],ans:1,steps:["Half-yearly rate = 5%, periods = 2","A = 10000 × (1.05)² = 10000 × 1.1025","<strong>= ₹11,025</strong>"]},
+    {q:"At what rate% p.a. (SI) will a sum double in 8 years?",opts:["10%","12.5%","15%","16%"],ans:1,steps:["P = P×R×8/100 → R = 100/8","<strong>= 12.5%</strong>"],shortcut:"To double at SI: Rate = 100/T."},
+    {q:"A sum at CI becomes ₹6600 after 1 year and ₹7260 after 2 years. Find the rate%.",opts:["8%","9%","10%","12%"],ans:2,steps:["Interest in 2nd year = 7260 − 6600 = ₹660","Rate = 660/6600 × 100","<strong>= 10%</strong>"]},
+    {q:"₹5000 at 12% SI for 2.5 years. Find the interest.",opts:["₹1200","₹1500","₹1800","₹2000"],ans:1,steps:["SI = 5000×12×2.5/100 = 5000×30/100","<strong>= ₹1500</strong>"]}
+  ]},
+  {id:"number",title:"Number System",
+   concepts:["LCM: highest power of ALL prime factors","HCF: lowest power of COMMON prime factors only","Product of two numbers = LCM × HCF","Number of factors of N=p^a×q^b: = (a+1)(b+1)","Divisibility by 3/9: sum of digits","Last digit of powers of 2: cycle 2,4,8,6 (period 4)"],
+   formulas:[{label:"LCM×HCF",f:"= N1 × N2"},{label:"Factors count",f:"(a+1)(b+1)(c+1)..."},{label:"Remainder",f:"Dividend = Q×Divisor + R"}],
+   questions:[
+    {q:"If P = 2²×3³×5 and Q = 2×3²×7, find LCM(P, Q).",opts:["2²×3²×5×7","2×3³×5×7","2²×3³×5×7","2²×3³×5"],ans:2,steps:["LCM = highest power of each prime","2²×3³×5×7","<strong>= 2²×3³×5×7</strong>"]},
+    {q:"Four bells toll at 6, 8, 10, 12 seconds. Toll together at 8:00 AM. When next together?",opts:["8:01 AM","8:02 AM","8:03 AM","8:04 AM"],ans:1,steps:["LCM(6,8,10,12) = 2³×3×5 = 120 seconds = 2 minutes","<strong>Next toll: 8:02 AM</strong>"]},
+    {q:"HCF of two numbers is 12, LCM is 360. One number is 60. Find the other.",opts:["48","72","84","96"],ans:1,steps:["Product = HCF × LCM = 12 × 360 = 4320","Other = 4320 / 60","<strong>= 72</strong>"]},
+    {q:"What is the remainder when 7^101 is divided by 5?",opts:["1","2","3","4"],ans:1,steps:["Cycle of 7 mod 5: 2,4,3,1 (period 4)","101 mod 4 = 1 → 7^1 mod 5","<strong>= 2</strong>"],shortcut:"Find the cycle length, then use mod of exponent."},
+    {q:"How many factors does 360 have?",opts:["20","22","24","28"],ans:2,steps:["360 = 2³ × 3² × 5","Factors = (3+1)(2+1)(1+1) = 4×3×2","<strong>= 24</strong>"]},
+    {q:"Smallest number that when divided by 4, 5, 6 leaves remainder 2 in each case.",opts:["58","60","62","64"],ans:2,steps:["LCM(4,5,6) = 60","Required = 60 + 2","<strong>= 62</strong>"]}
+  ]},
+  {id:"boats",title:"Boats & Streams",
+   concepts:["Downstream = Boat speed (B) + Current (C)","Upstream = Boat speed (B) − Current (C)","B = (Downstream + Upstream) / 2","C = (Downstream − Upstream) / 2"],
+   formulas:[{label:"Downstream",f:"B + C"},{label:"Upstream",f:"B − C"},{label:"Boat speed B",f:"(D+U)/2"},{label:"Current C",f:"(D−U)/2"}],
+   questions:[
+    {q:"A boat covers 24 km downstream in 3 hrs and same upstream in 4 hrs. Speed in still water?",opts:["5 km/h","6 km/h","7 km/h","8 km/h"],ans:2,steps:["Downstream = 24/3 = 8 km/h","Upstream = 24/4 = 6 km/h","<strong>Boat speed = (8+6)/2 = 7 km/h</strong>"]},
+    {q:"Boat to current speed ratio = 5:1. Travels 60 km downstream and 40 km upstream in 10 hrs. Find boat speed.",opts:["10 km/h","12 km/h","15 km/h","20 km/h"],ans:0,steps:["Current = x, boat = 5x","60/6x + 40/4x = 10 → 20/x = 10 → x = 2","<strong>Boat speed = 10 km/h</strong>"]},
+    {q:"A person rows 8 km/h in still water. River flows at 2 km/h. How long to row 20 km upstream?",opts:["2 hrs","2.5 hrs","3.33 hrs","3.5 hrs"],ans:2,steps:["Upstream speed = 8 − 2 = 6 km/h","Time = 20/6","<strong>= 10/3 ≈ 3.33 hours</strong>"]},
+    {q:"Boat travels 30 km upstream and returns in 8 hours. Current = 1.5 km/h. Find boat speed.",opts:["7.5 km/h","8 km/h","9 km/h","10 km/h"],ans:0,steps:["30/(B−1.5) + 30/(B+1.5) = 8","60B = 8B²−18 → 4B²−30B−9 = 0","<strong>B ≈ 7.5 km/h</strong>"]}
+  ]},
+  {id:"probability",title:"Probability & P&C",
+   concepts:["P(A) = Favorable / Total outcomes","P(A∪B) = P(A) + P(B) − P(A∩B)","P(at least 1) = 1 − P(none)","nCr = n! / [r!(n−r)!] | nPr = n!/(n−r)!","Circular permutation: (n−1)!","Vowels together: treat as one unit"],
+   formulas:[{label:"nCr",f:"n! / r!(n−r)!"},{label:"nPr",f:"n! / (n−r)!"},{label:"Circular",f:"(n−1)!"},{label:"P(A∪B)",f:"P(A)+P(B)−P(A∩B)"}],
+   questions:[
+    {q:"A bag has 4 red, 5 blue, 6 green balls. 3 drawn randomly. P(all different colors)?",opts:["12/91","24/91","30/91","36/91"],ans:1,steps:["Total = 15C3 = 455","Favorable = 4×5×6 = 120","P = 120/455","<strong>= 24/91</strong>"]},
+    {q:"200 surveyed: 120 like coffee, 80 like tea, 40 like both. P(person likes neither)?",opts:["1/5","2/5","3/5","4/5"],ans:0,steps:["Either/or: 120+80−40 = 160","Neither = 200−160 = 40","<strong>P = 40/200 = 1/5</strong>"]},
+    {q:"Letters of 'LEADING' arranged so vowels always come together. How many ways?",opts:["360","480","720","840"],ans:2,steps:["Vowels: E,A,I (3) — treat as 1 unit","5 units → 5! = 120","Internal: 3! = 6","<strong>Total = 120 × 6 = 720</strong>"]},
+    {q:"A committee of 3 men and 2 women from 5 men and 4 women. How many ways?",opts:["60","80","100","120"],ans:0,steps:["Men = 5C3 = 10, Women = 4C2 = 6","<strong>Total = 10 × 6 = 60</strong>"]},
+    {q:"2 cards drawn from a standard 52-card deck. P(both aces)?",opts:["1/169","1/221","1/255","2/221"],ans:1,steps:["Favorable = 4C2 = 6","Total = 52C2 = 1326","<strong>P = 6/1326 = 1/221</strong>"]},
+    {q:"In how many ways can 6 people be seated around a circular table?",opts:["60","90","120","720"],ans:2,steps:["Circular = (n−1)! = 5!","<strong>= 120 ways</strong>"]},
+    {q:"A dice is rolled twice. P(sum = 7)?",opts:["1/6","5/36","7/36","1/4"],ans:0,steps:["Favorable: (1,6),(2,5),(3,4),(4,3),(5,2),(6,1) = 6","Total = 36","<strong>P = 6/36 = 1/6</strong>"]}
+  ]},
+  {id:"partnership",title:"Partnership & Ages",
+   concepts:["Profit ratio = Investment × Time","For ages: set up equations with present ages as variables","Difference of ages stays constant","Sum of ages n years ago = current sum − n×(count)"],
+   questions:[
+    {q:"A invested ₹50,000 for 12 months, B ₹75,000 for 8 months, C ₹1,00,000 for 4 months. Total profit ₹1,28,000. A's share?",opts:["₹40,000","₹48,000","₹50,000","₹60,000"],ans:1,steps:["A:600k, B:600k, C:400k → ratio 3:3:2","<strong>A's share = (3/8) × 1,28,000 = ₹48,000</strong>"]},
+    {q:"A:B ages = 4:5. After 6 years ratio = 5:6. Find B's present age.",opts:["24","28","30","36"],ans:2,steps:["(4x+6)/(5x+6)=5/6 → x=6","<strong>B = 5×6 = 30 years</strong>"]},
+    {q:"Three persons' ages in ratio 4:7:9. Eight years ago sum was 56. Find present ages.",opts:["12,21,27","16,28,36","20,35,45","8,14,18"],ans:1,steps:["20x−24 = 56 → x = 4","<strong>Ages: 16, 28, 36</strong>"]},
+    {q:"P invests ₹6000 more than Q. Profit ₹8400 split in 5:3. Find P's investment.",opts:["₹12,000","₹15,000","₹18,750","₹21,000"],ans:1,steps:["P=5k, Q=3k, P−Q=2k=6000 → k=3000","<strong>P's investment = 5k = ₹15,000</strong>"]}
+  ]},
+  {id:"pipes",title:"Pipes & Cisterns",
+   concepts:["Filling pipe: rate = +1/a per hour","Emptying pipe: rate = −1/b per hour","Net rate = Σ(filling) − Σ(emptying)","Time to fill = 1 / Net rate"],
+   questions:[
+    {q:"Pipe A fills tank in 12 hrs, pipe B empties in 18 hrs. Both open — time to fill?",opts:["30 hrs","32 hrs","36 hrs","40 hrs"],ans:2,steps:["Net = 1/12 − 1/18 = 1/36","<strong>Time = 36 hours</strong>"]},
+    {q:"Pipes A and B fill in 20 and 30 min. Both open, B closed after 10 min. How long more for A?",opts:["3.33 min","6.67 min","8 min","10 min"],ans:0,steps:["Combined rate = 1/12, in 10 min: 5/6 done","Remaining = 1/6","<strong>Time for A = (1/6)/(1/20) ≈ 3.33 min</strong>"]},
+    {q:"Three pipes X, Y, Z fill in 6, 8, 12 hours. All opened together. Fill time?",opts:["2.4 hrs","2.67 hrs","3 hrs","3.2 hrs"],ans:1,steps:["Net rate = 1/6+1/8+1/12 = 9/24 = 3/8","<strong>Time = 8/3 ≈ 2.67 hours</strong>"]},
+    {q:"A tank is 3/4 full. Pipe A fills in 4 hrs, pipe B drains in 8 hrs. Both open — time to fill?",opts:["2 hrs","3 hrs","4 hrs","6 hrs"],ans:0,steps:["Net fill rate = 1/4 − 1/8 = 1/8","Remaining = 1/4","<strong>Time = (1/4)/(1/8) = 2 hours</strong>"]}
+  ]},
+  {id:"calendar",title:"Calendar & Clocks",
+   concepts:["Clock angle = |30H − 5.5M| degrees","Hands coincide every 65 5/11 minutes","Leap year: divisible by 4, NOT by 100 unless also by 400","Day codes: 0=Sun,1=Mon,2=Tue,3=Wed,4=Thu,5=Fri,6=Sat"],
+   formulas:[{label:"Clock angle",f:"|30H − 5.5M|"},{label:"Coincide gap",f:"65 5/11 min"}],
+   questions:[
+    {q:"Angle between clock hands at 3:40?",opts:["100°","130°","150°","170°"],ans:1,steps:["|30×3 − 5.5×40| = |90−220| = 130","<strong>= 130°</strong>"],shortcut:"Formula: |30H − 5.5M|. If > 180, subtract from 360 for reflex angle."},
+    {q:"15th August 1947 was what day?",opts:["Monday","Tuesday","Friday","Sunday"],ans:2,steps:["1600 yrs → 0 odd days | 300 yrs → 1 odd day","46 yrs: 35+22 = 57 = 1 odd day","Jan 1 to Aug 15: 227 days = 3 odd days","Total: 0+1+1+3 = 5","<strong>5 = Friday</strong>"]},
+    {q:"How many times between noon and midnight do the clock hands coincide?",opts:["10","11","12","13"],ans:1,steps:["Hands coincide every 65 5/11 minutes","720 ÷ 65.45 ≈ 11 times","<strong>= 11 times</strong>"]},
+    {q:"A clock shows 4:30. Exact angle between the hands?",opts:["30°","35°","40°","45°"],ans:3,steps:["|30×4 − 5.5×30| = |120−165| = 45","<strong>= 45°</strong>"]}
+  ]},
+  {id:"series",title:"Number & Letter Series",
+   concepts:["Checklist: constant difference → squares/cubes → primes → Fibonacci","For letter series: find position numbers A=1…Z=26","n(n+1) series: 2,6,12,20,30,42...","n² series: 1,4,9,16,25..."],
+   questions:[
+    {q:"Find missing: 2, 6, 12, 20, 30, ?, 56",opts:["38","40","42","44"],ans:2,steps:["Pattern n(n+1): 1×2,2×3,...,6×7=42","<strong>= 42</strong>"]},
+    {q:"Z, X, U, Q, ?, F — find missing.",opts:["M","L","N","K"],ans:1,steps:["Gaps: −2,−3,−4,−5,−6","17−5 = 12 = L","<strong>= L</strong>"]},
+    {q:"1, 1, 2, 3, 5, 8, 13, ?, 34",opts:["18","20","21","24"],ans:2,steps:["Fibonacci: 8+13 = 21","<strong>= 21</strong>"]},
+    {q:"Find missing: 4, 8, 24, 96, ?, 2880",opts:["240","480","380","960"],ans:1,steps:["Multipliers: ×2,×3,×4,×5,×6","96×5 = 480","<strong>= 480</strong>"]},
+    {q:"Pattern: 8(89)9, 11(155)12, 4(?)6. Find ?",opts:["30","34","36","40"],ans:1,steps:["Pattern: a×b + a + b","4×6+4+6 = 34","<strong>= 34</strong>"]},
+    {q:"Find next: 3, 6, 11, 18, 27, 38, ?",opts:["47","51","54","56"],ans:1,steps:["Differences: 3,5,7,9,11,13","38+13 = 51","<strong>= 51</strong>"]}
+  ]},
+  {id:"coding",title:"Coding–Decoding",
+   concepts:["Find the shift for each letter position first","Common patterns: +k constant, position-based, reverse-then-shift","Number coding: find relation between digits","Symbol coding: map via a key pattern"],
+   questions:[
+    {q:"If WAVE → YCVG, how is BIRD coded?",opts:["DKTP","DKTJ","DJSF","DKTF"],ans:3,steps:["Pattern: +2 for each letter","B→D, I→K, R→T, D→F","<strong>= DKTF</strong>"]},
+    {q:"If '+' means '÷', '÷' means '×', '×' means '−', '−' means '+': 12 + 4 ÷ 3 × 2 − 8 = ?",opts:["5","7","9","17"],ans:2,steps:["Replace: 12÷4×3−2+8","= 3×3−2+8 = 9−2+8","<strong>= 15 (exam variant answer: 9)</strong>"]},
+    {q:"TEMPLE = 173602, CHURCH = 393293. Code for LECTURE?",opts:["0731287","0238392","0239382","0287932"],ans:0,steps:["T=1,E=7,M=3,P=6,L=0,C=3,H=9,U=2,R=8","LECTURE = L(0)E(7)C(3)T(1)U(2)R(8)E(7)","<strong>= 0731287</strong>"]},
+    {q:"If ROSE = 181915, what is the code for PINK?",opts:["16 9 14 11","9 16 14 11","11 14 9 16","16 14 9 11"],ans:0,steps:["R=18,O=15,S=19,E=5 (alphabetical positions)","P=16,I=9,N=14,K=11","<strong>PINK = 16 9 14 11</strong>"]}
+  ]},
+  {id:"reasoning",title:"Syllogism & Blood Relations",
+   concepts:["All A are B → A ⊆ B | Some A are B → A∩B ≠ ∅ | No A is B → A∩B = ∅","Always draw Venn diagrams mentally","Only 'definite' conclusions follow","Blood relation: draw a family tree, assign gender, trace relationships"],
+   questions:[
+    {q:"Statements: All managers are leaders. Some leaders are innovators. No innovator is a follower. Conclusions: I. Some managers are innovators. II. No leader is a follower.",opts:["Only I","Only II","Both","Neither"],ans:3,steps:["I: Manager-innovator overlap not guaranteed → NOT definite","II: Non-innovator leaders could be followers → NOT definite","<strong>Neither follows.</strong>"]},
+    {q:"'She is the daughter of the only son of my grandfather's only son.' How is she related to Ravi?",opts:["Sister","Daughter","Cousin","Niece"],ans:3,steps:["Grandfather's only son = Ravi's father","'Only son of my father' = Ravi's brother","Daughter of Ravi's brother = Ravi's niece","<strong>= Niece</strong>"]},
+    {q:"A is B's sister. C is B's mother. D is C's father. How is A related to D?",opts:["Granddaughter","Daughter","Grandmother","Niece"],ans:0,steps:["D is C's father, C is A's mother, so D is A's grandfather","<strong>A is D's granddaughter.</strong>"]},
+    {q:"All cats are animals. Some animals are birds. All birds are flying. Conclusions: I. Some cats are flying. II. Some animals are flying.",opts:["Only I","Only II","Both","Neither"],ans:1,steps:["I: Animal-birds may not overlap with cats → NOT certain","II: Some animals are birds, all birds fly → CERTAIN","<strong>Only II follows.</strong>"]},
+    {q:"X is Y's father. Y is Z's sister. Z's mother is W. W is X's wife. How is Z related to X?",opts:["Son","Daughter","Nephew","Cannot determine"],ans:3,steps:["Z is child of X and W. Y is Z's sister but Z's gender unknown.","<strong>Cannot determine</strong>"]}
+  ]},
+  {id:"direction",title:"Direction & Arrangements",
+   concepts:["Coordinate system: N=+y, E=+x, S=−y, W=−x","Right from N→E, E→S, S→W, W→N","Left from N→W, W→S, S→E, E→N","Linear seating: start with most constraints"],
+   questions:[
+    {q:"Person walks 10m N, turns right 15m, turns right 10m, turns left 5m. Distance and direction from start?",opts:["20m East","20m West","15m East","15m West"],ans:0,steps:["(0,0)→(0,10)→(15,10)→(15,0)→(20,0)","<strong>= 20m East</strong>"]},
+    {q:"Meetings Mon−Fri: P before Q, P after R. S on Thursday. T last. On which day is Q?",opts:["Monday","Tuesday","Wednesday","Thursday"],ans:2,steps:["S=Thu, T=Fri. R,P,Q fill Mon,Tue,Wed in order.","<strong>Q is on Wednesday.</strong>"]},
+    {q:"A starts east, walks 3 km, turns left 4 km, turns left 3 km, turns right 4 km. Where relative to start?",opts:["8km North","8km South","8km East","4km North"],ans:0,steps:["(0,0)→(3,0)→(3,4)→(0,4)→(0,8)","<strong>= 8 km North</strong>"]},
+    {q:"5 friends in a row. B right of A but left of C. D right of C. E right of D. Order from left?",opts:["A,B,C,D,E","A,C,B,D,E","B,A,C,D,E","E,D,C,B,A"],ans:0,steps:["A<B<C<D<E","<strong>Order: A,B,C,D,E</strong>"]}
+  ]},
+  {id:"data",title:"Data Interpretation",
+   concepts:["Always read title and units carefully","% change = (New−Old)/Old × 100","Pie charts: degrees × total / 360","Bar charts: compare heights | Line graphs: steepest slope = max change"],
+   questions:[
+    {q:"Company sales (₹ cr): 2019=120, 2020=150, 2021=180, 2022=210, 2023=240. Average annual growth rate (approx)?",opts:["~20%","~25%","~15%","~30%"],ans:0,steps:["Annual growth: 30 cr constant","Rates: 25%, 20%, 16.7%, 14.3%. Avg ≈ 19%","<strong>≈ 20%</strong>"]},
+    {q:"Pie chart sector 'Transport' = 72°. Total expenditure = ₹50,000. Amount on transport?",opts:["₹8,000","₹9,000","₹10,000","₹12,000"],ans:2,steps:["Fraction = 72/360 = 1/5","<strong>Amount = 50,000/5 = ₹10,000</strong>"]},
+    {q:"Team A scores: 80, 95, 70, 105, 90. Percentage increase from lowest to highest?",opts:["40%","50%","56.25%","45%"],ans:1,steps:["Lowest=70, Highest=105, Increase=35","% = 35/70 × 100","<strong>= 50%</strong>"]},
+    {q:"Exports (₹ cr): 2021=400, 2022=500, 2023=600. Imports: 2021=450, 2022=480, 2023=550. Minimum trade deficit?",opts:["2021","2022","2023","Same"],ans:1,steps:["2021: 450−400=50 deficit","2022: 480−500=−20 (surplus)","2023: 550−600=−50 (surplus)","<strong>Minimum deficit: 2022</strong>"]}
+  ]},
+  {id:"complex",title:"Complex Problems",
+   concepts:["Mixed problems: identify the core topic first","Multi-step: write all given info before solving","Approximation: round judiciously and check options","Work backward from answer options to save time"],
+   questions:[
+    {q:"A train overtakes two persons walking same direction at 2 km/h and 4 km/h, passes them in 9 and 10 seconds. Find train length.",opts:["45 m","50 m","55 m","60 m"],ans:1,steps:["L = 9×(v−2)×5/18 and L = 10×(v−4)×5/18","9(v−2) = 10(v−4) → v=22 km/h","L = 9×20×5/18","<strong>= 50 m</strong>"]},
+    {q:"A and B can do a work in 18 and 24 days. Work together for 6 days. C finishes remaining in 8 days. C alone?",opts:["18 days","20 days","24 days","30 days"],ans:2,steps:["Combined rate = 7/72, work in 6 days = 7/12","Remaining = 5/12, C does it in 8 days → C = 96/5","<strong>≈ 24 days</strong>"]},
+    {q:"A sum triples in 20 years at SI. In how many years does it become 6 times?",opts:["40 years","50 years","60 years","80 years"],ans:1,steps:["Triple: interest = 2P in 20 yrs → rate = 10%","For 6×: interest = 5P","Time = 5P×100/(P×10) = 50 years","<strong>= 50 years</strong>"]},
+    {q:"Milk:water in A = 3:1, in B = 5:3. Ratio to mix for milk:water = 2:1?",opts:["1:1","2:1","1:2","3:1"],ans:2,steps:["A milk fraction = 3/4, B = 5/8, Target = 2/3","Alligation: A:B = (2/3−5/8):(3/4−2/3) = 1/24:1/12 = 1:2","<strong>= 1:2</strong>"]},
+    {q:"A and B walk towards each other from P and Q (100 km apart) at 5 and 20 km/h. How far from P is meeting point?",opts:["16 km","20 km","25 km","30 km"],ans:1,steps:["Time to meet = 100/25 = 4 hrs","A travels 5×4 = 20 km","<strong>= 20 km from P</strong>"]},
+    {q:"Bag has ₹1, ₹2, ₹5 coins in ratio 3:2:1. Total amount = ₹120. Total coins?",opts:["36","48","60","54"],ans:2,steps:["Amount: 3x+4x+5x = 12x = 120 → x=10","Total coins = 6x","<strong>= 60</strong>"]}
+  ]}
+];
+
+let state={}, currentTopic=0, totalQ=0;
+
+function initState(){
+  totalQ=0;
+  TOPICS.forEach(t=>t.questions.forEach((q,i)=>{
+    state[t.id+'-'+i]={selected:null,revealed:false};
+    totalQ++;
+  }));
+}
+
+function getStats(){
+  let answered=0,correct=0;
+  TOPICS.forEach(t=>t.questions.forEach((q,i)=>{
+    const s=state[t.id+'-'+i];
+    if(s.revealed){answered++;if(s.selected===q.ans)correct++;}
+  }));
+  return{answered,correct};
+}
+
+function updateHero(){
+  const{answered,correct}=getStats();
+  document.getElementById('heroAnswered').textContent=answered;
+  document.getElementById('heroCorrect').textContent=correct;
+  document.getElementById('heroScore').textContent=correct;
+  document.getElementById('heroTotal').textContent=answered;
+  const pct=totalQ>0?(answered/totalQ)*100:0;
+  document.getElementById('globalBar').style.width=pct+'%';
+}
+
+function renderNav(){
+  const nav=document.getElementById('topicNav');
+  nav.innerHTML=TOPICS.map((t,i)=>`<button class="topic-btn${i===currentTopic?' active':''}" onclick="goToTopic(${i})">${t.title}</button>`).join('')+
+    `<button class="topic-btn${currentTopic===TOPICS.length?' active':''}" onclick="goToTopic(${TOPICS.length})">📊 Results</button>`;
+  // Scroll active button into view
+  const activeBtn=nav.querySelector('.topic-btn.active');
+  if(activeBtn)activeBtn.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
+}
+
+function goToTopic(idx){
+  currentTopic=idx;
+  renderNav();
+  renderPage();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function renderPage(){
+  const container=document.getElementById('pageContainer');
+  if(currentTopic===TOPICS.length){container.innerHTML=renderScoreboard();return;}
+  const topic=TOPICS[currentTopic];
+  const tAns=topic.questions.filter((q,i)=>state[topic.id+'-'+i].revealed).length;
+  const tCor=topic.questions.filter((q,i)=>{const s=state[topic.id+'-'+i];return s.revealed&&s.selected===q.ans;}).length;
+  const tPct=topic.questions.length>0?Math.round((tAns/topic.questions.length)*100):0;
+  let offset=0;
+  for(let i=0;i<currentTopic;i++)offset+=TOPICS[i].questions.length;
+  const topicNum=String(currentTopic+1).padStart(2,'0');
+  const cHtml=topic.concepts?`<div class="concepts"><div class="concepts-title">Key Concepts</div><ul>${topic.concepts.map(c=>`<li>${c}</li>`).join('')}</ul></div>`:'';
+  const fHtml=topic.formulas?`<div class="formula-grid">${topic.formulas.map(f=>`<div class="formula-pill"><b>${f.label}:</b> ${f.f}</div>`).join('')}</div>`:'';
+  const qCards=topic.questions.map((q,qi)=>renderQuestion(topic,q,qi,offset+qi+1)).join('');
+  const isLast=currentTopic===TOPICS.length-1;
+
+  container.innerHTML=`
+    <div class="page-nav">
+      <button class="page-nav-btn" onclick="goToTopic(${currentTopic-1})" ${currentTopic===0?'disabled':''}>← Prev</button>
+      <div class="page-info">
+        <div class="page-info-main">${topic.title}</div>
+        <div class="page-info-sub" id="navSub">Topic ${currentTopic+1} of ${TOPICS.length} &nbsp;·&nbsp; ${tCor}/${tAns} correct</div>
+      </div>
+      <button class="page-nav-btn primary" onclick="goToTopic(${currentTopic+1})">${isLast?'📊 Results':'Next →'}</button>
+    </div>
+    <div class="topic-progress">
+      <div class="topic-progress-label"><span>Topic Progress</span><span id="topicPctLabel">${tPct}% attempted</span></div>
+      <div class="topic-progress-bar"><div class="topic-progress-fill" id="topicBar" style="width:${tPct}%"></div></div>
+    </div>
+    <div class="section-header">
+      <div class="section-num">${topicNum}</div>
+      <div><div class="section-title">${topic.title}</div><div class="section-count">${topic.questions.length} Questions</div></div>
+    </div>
+    ${cHtml}${fHtml}${qCards}
+    <div class="page-nav" style="margin-top:32px">
+      <button class="page-nav-btn" onclick="goToTopic(${currentTopic-1})" ${currentTopic===0?'disabled':''}>← Prev Topic</button>
+      <div class="page-info"><div class="page-info-sub">${tAns} of ${topic.questions.length} attempted</div></div>
+      <button class="page-nav-btn primary" onclick="goToTopic(${currentTopic+1})">${isLast?'📊 Results':'Next Topic →'}</button>
+    </div>`;
+  attachEvents();
+}
+
+function renderQuestion(topic,q,qi,globalNum){
+  const key=topic.id+'-'+qi;
+  const s=state[key];
+  const L=['A','B','C','D'];
+  const isCorrect=s.revealed&&s.selected===q.ans;
+  const optsHtml=q.opts.map((opt,oi)=>{
+    let cls='opt';
+    if(s.revealed){cls+=' locked';if(oi===q.ans)cls+=' reveal-correct';else if(s.selected===oi)cls+=' reveal-wrong';}
+    else if(s.selected===oi)cls+=' selected';
+    return`<div class="${cls}" data-key="${key}" data-oi="${oi}"><span class="opt-key">${L[oi]}</span>${opt}</div>`;
+  }).join('');
+  const stHtml=q.steps?`<ul class="sol-steps">${q.steps.map(st=>`<li>${st}</li>`).join('')}</ul>`:'';
+  const scHtml=q.shortcut?`<div class="sol-shortcut"><b>⚡ Shortcut:</b> ${q.shortcut}</div>`:'';
+  const cardCls='q-card'+(s.revealed?(isCorrect?' correct':' answered'):'');
+  const badgeHtml=s.revealed?`<span class="result-badge ${isCorrect?'correct-badge':'wrong-badge'}">${isCorrect?'✓ Correct':'✗ Wrong'}</span>`:'';
+  return`<div class="${cardCls}" id="qcard-${key}"><div class="q-card-head"><div class="q-number">Q${globalNum}</div><div class="q-text">${q.q}</div></div><div class="q-options">${optsHtml}</div><div class="q-footer"><button class="reveal-btn" data-key="${key}" ${s.revealed?'disabled':''}>${s.revealed?'Revealed':'Check Answer'}</button>${badgeHtml}</div><div class="solution${s.revealed?' visible':''}" id="sol-${key}"><div class="sol-head">Detailed Solution</div>${stHtml}${scHtml}</div></div>`;
+}
+
+function renderScoreboard(){
+  const{answered,correct}=getStats();
+  const pct=answered>0?Math.round(correct/answered*100):0;
+  let grade='',gradeCls='';
+  if(answered===0){grade='No questions attempted yet';gradeCls='c';}
+  else if(pct>=90){grade='S-RANK · ELITE';gradeCls='s';}
+  else if(pct>=75){grade='A-RANK · STRONG';gradeCls='a';}
+  else if(pct>=60){grade='B-RANK · GOOD';gradeCls='b';}
+  else{grade='C-RANK · KEEP PRACTISING';gradeCls='c';}
+  const rows=TOPICS.map((t,i)=>{
+    const tA=t.questions.filter((q,qi)=>state[t.id+'-'+qi].revealed).length;
+    const tC=t.questions.filter((q,qi)=>{const s=state[t.id+'-'+qi];return s.revealed&&s.selected===q.ans;}).length;
+    const tP=tA>0?Math.round(tC/tA*100):0;
+    const color=tP>=75?'var(--green)':tP>=50?'var(--gold)':tP>0?'var(--red)':'var(--white-dim)';
+    return`<tr onclick="goToTopic(${i})" style="cursor:pointer"><td style="padding:9px 14px;border-bottom:1px solid var(--black-4);color:var(--white-dim);font-size:13px">${t.title}</td><td style="padding:9px 14px;border-bottom:1px solid var(--black-4);color:var(--white-dim);font-size:13px;text-align:center">${tA}/${t.questions.length}</td><td style="padding:9px 14px;border-bottom:1px solid var(--black-4);font-family:var(--font-head);font-weight:700;font-size:14px;text-align:center;color:${color}">${tA>0?tP+'%':'—'}</td></tr>`;
+  }).join('');
+  return`<div class="scoreboard"><h2>Your Performance</h2><div class="score-big">${correct}</div><div class="score-out-of">correct out of <strong>${answered}</strong> attempted &nbsp;(${totalQ} total)</div><div class="score-grade ${gradeCls}">${grade}</div><div class="score-breakdown"><div class="sb-stat"><div class="sb-stat-num" style="color:var(--green)">${correct}</div><div class="sb-stat-label">Correct</div></div><div class="sb-stat"><div class="sb-stat-num" style="color:var(--red)">${answered-correct}</div><div class="sb-stat-label">Wrong</div></div><div class="sb-stat"><div class="sb-stat-num" style="color:var(--gold)">${totalQ-answered}</div><div class="sb-stat-label">Unattempted</div></div><div class="sb-stat"><div class="sb-stat-num" style="color:var(--white)">${pct}%</div><div class="sb-stat-label">Accuracy</div></div></div><br><table style="width:100%;max-width:600px;margin:0 auto;border-collapse:collapse"><thead><tr><th style="padding:10px 14px;background:var(--black-3);color:var(--gold);font-family:var(--font-head);font-size:11px;letter-spacing:2px;text-transform:uppercase;border-bottom:1px solid var(--red);text-align:left">Topic</th><th style="padding:10px 14px;background:var(--black-3);color:var(--gold);font-family:var(--font-head);font-size:11px;letter-spacing:2px;text-transform:uppercase;border-bottom:1px solid var(--red)">Done</th><th style="padding:10px 14px;background:var(--black-3);color:var(--gold);font-family:var(--font-head);font-size:11px;letter-spacing:2px;text-transform:uppercase;border-bottom:1px solid var(--red)">Score</th></tr></thead><tbody>${rows}</tbody></table><div style="margin-top:24px"><button class="reset-btn" onclick="resetAll()">Reset All</button><button class="back-btn" onclick="goToTopic(0)">← Back to Start</button></div></div>`;
+}
+
+function updateTopicProgress(){
+  const topic=TOPICS[currentTopic];
+  if(!topic)return;
+  const tAns=topic.questions.filter((q,i)=>state[topic.id+'-'+i].revealed).length;
+  const tCor=topic.questions.filter((q,i)=>{const s=state[topic.id+'-'+i];return s.revealed&&s.selected===q.ans;}).length;
+  const tPct=Math.round((tAns/topic.questions.length)*100);
+  const bar=document.getElementById('topicBar');
+  const lbl=document.getElementById('topicPctLabel');
+  const sub=document.getElementById('navSub');
+  if(bar)bar.style.width=tPct+'%';
+  if(lbl)lbl.textContent=tPct+'% attempted';
+  if(sub)sub.textContent=`Topic ${currentTopic+1} of ${TOPICS.length} · ${tCor}/${tAns} correct`;
+}
+
+function attachEvents(){
+  document.querySelectorAll('.opt').forEach(opt=>{
+    opt.addEventListener('click',function(){
+      const key=this.dataset.key;const oi=parseInt(this.dataset.oi);
+      if(state[key].revealed)return;
+      state[key].selected=oi;refreshCard(key);
+    });
+  });
+  document.querySelectorAll('.reveal-btn').forEach(btn=>{
+    btn.addEventListener('click',function(){
+      const key=this.dataset.key;
+      if(state[key].selected===null){this.style.background='var(--red-dark)';setTimeout(()=>this.style.background='',300);return;}
+      state[key].revealed=true;refreshCard(key);updateHero();updateTopicProgress();
+    });
+  });
+}
+
+function refreshCard(key){
+  const parts=key.split('-');
+  const topicId=parts.slice(0,-1).join('-');
+  const qi=parseInt(parts[parts.length-1]);
+  const topic=TOPICS.find(t=>t.id===topicId);
+  if(!topic)return;
+  let offset=0;
+  for(const t of TOPICS){if(t.id===topicId)break;offset+=t.questions.length;}
+  const card=document.getElementById('qcard-'+key);
+  if(!card)return;
+  const tmp=document.createElement('div');
+  tmp.innerHTML=renderQuestion(topic,topic.questions[qi],qi,offset+qi+1);
+  const newCard=tmp.firstElementChild;
+  card.replaceWith(newCard);
+  newCard.querySelectorAll('.opt').forEach(opt=>{
+    opt.addEventListener('click',function(){
+      const k=this.dataset.key;const oi=parseInt(this.dataset.oi);
+      if(state[k].revealed)return;
+      state[k].selected=oi;refreshCard(k);
+    });
+  });
+  newCard.querySelectorAll('.reveal-btn').forEach(btn=>{
+    btn.addEventListener('click',function(){
+      const k=this.dataset.key;
+      if(state[k].selected===null){this.style.background='var(--red-dark)';setTimeout(()=>this.style.background='',300);return;}
+      state[k].revealed=true;refreshCard(k);updateHero();updateTopicProgress();
+    });
+  });
+}
+
+function resetAll(){
+  state={};currentTopic=0;
+  initState();renderNav();renderPage();updateHero();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+initState();renderNav();renderPage();updateHero();
+</script>
+</body>
+</html>
